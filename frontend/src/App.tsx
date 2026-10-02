@@ -5,7 +5,7 @@ import BookDetail from './components/BookDetail'
 import BookForm from './components/BookForm'
 import BookList from './components/BookList'
 import { GENRES, type Genre, type Checkout, type CheckoutFormValues, type Book, type BookFormValues } from './types'
-import { listBooks, getBook, createBook, createCheckout } from './api/api'
+import { listBooks, getBook, createBook, createCheckout, listBookCheckouts } from './api/api'
 const initialBookForm: BookFormValues = {
   title: '',
   genre: 'Fiction',
@@ -81,16 +81,19 @@ setSelectedBook(selected) saves the selected book
 7. setError() displays a 'Failed to load book' message if the book cannot load.
 */
 
-  async function handleSelectBook(bookId: number) {
-    setError(null)
-    try {
-  const selected = await getBook(bookId)
-  setSelectedBook(selected)
-    }
-    catch {
-      setError('Failed to load book')
-    }
+
+   async function handleSelectBook(bookId: number) {
+  setError(null)
+  try {
+    const selected = await getBook(bookId)
+    const checkouts = await listBookCheckouts(bookId)
+
+    setSelectedBook(selected)
+    setBookCheckouts(checkouts)
+  } catch {
+    setError('Failed to load book')
   }
+}
 
 /*
 Code 3: Explanation
